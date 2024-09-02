@@ -16,29 +16,36 @@ camera.position.setX(-3);
 
 renderer.render(scene, camera);
 
+//light 
+const ambientLight = new Three.AmbientLight(0xffffff);
+scene.add(ambientLight);
+
+const pointLight = new Three.PointLight(0xffffff);
+pointLight.position.set(20, 20, 20);
+scene.add(pointLight);
+
+const loader = new Three.TextureLoader();
+const bgTexture = loader.load('./public/space.jpg'); 
+scene.background = bgTexture;
+
+renderer.render(scene, camera);
+
 // Torus
 
 const geometry = new Three.TorusGeometry(10, 3, 16, 100);
-const material = new Three.MeshStandardMaterial({ color: 0xff6347 });
+const material = new Three.MeshStandardMaterial({ color: 0x0000aa });
 const torus = new Three.Mesh(geometry, material);
-
-const geometry1 = new Three.BoxGeometry(10, 10, 10);
-const material1 = new Three.MeshStandardMaterial({ color: 0xff6941 });
-const cube = new Three.Mesh(geometry1, material1);
-scene.add(cube);
-
-
 
 scene.add(torus);
 
 function animate() {
   requestAnimationFrame(animate);
 
-  console.log('animating...')
+ 
 
   torus.rotation.x += 0.01;
   torus.rotation.y += 0.005;
-  torus.rotation.z += 0.01;
+  torus.rotation.z += 0.001;
 
   renderer.render(scene, camera);
 }
