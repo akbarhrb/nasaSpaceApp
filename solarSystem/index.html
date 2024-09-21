@@ -1,14 +1,395 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <!-- <link rel="icon" type="image/svg+xml" href="#" /> -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Nasa Space App</title>
-  </head>
-  <body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Three.js Earth Model with Stars and Real Rotation Speed</title>
+    <style>
+        body {
+            background-size: cover;
+            margin: 0;
+            overflow: hidden;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+
+        #earth-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        #clock {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 32px;
+            text-align: center;
+            z-index: 1;
+            cursor: pointer;
+            color: white;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+           
+        }
+
+        #clock:hover {
+            color: darkgrey;
+           
+        }
+
+        #time-control {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+
+        #time-control label {
+            margin-right: 10px;
+            display: none;
+        }
+
+        #time-control input {
+            width: 200px;
+        }
+
+        
+
+        /* Information Box Styles */
+        #info-box {
+        position: absolute;
+        width: 300px;
+        height: 600px;
+        top: 70px;
+        left: 20px; /* Position it 20px from the left edge */
+        background: rgba(0, 0, 0, 0.8);
+        padding: 20px;
+        border-radius: 10px;
+        color: white;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        display: none;
+        z-index: 2;
+        max-width: 300px;
+    }
+
+        #info-box h2 {
+            margin-top: 0;
+        }
+
+        #info-box img {
+            width: 100%;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        #info-box button{
+            position: absolute;
+             top: 20px;
+             right: 20px;
+             background: red;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #moon-info-box {
+        position: absolute;
+        width: 300px;
+        height: 600px;
+        top: 70px;
+        left: 20px; /* Position it 20px from the left edge */
+        background: rgba(0, 0, 0, 0.8);
+        padding: 20px;
+        border-radius: 10px;
+        color: white;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        display: none;
+        z-index: 2;
+        max-width: 300px;
+    }
+
+        #moon-info-box h2 {
+            margin-top: 0;
+        }
+
+        #moon-info-box img {
+            width: 100%;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        #moon-info-box button{
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: red;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="earth-container">
+       
+        <div id="clock"></div>
+        <div id="info-box">
+            <button id="close-info">-</button>
+             <h2>Earth</h2>
+            <img src="https://wallpapercave.com/wp/wp4729516.jpg" alt="Earth Image"> <!-- Replace with a valid image URL -->
+            <p>The Earth is the third planet from the Sun and the only known astronomical object to harbor life.</p>
+            <p><strong>Diameter:</strong> 12,742 km</p>
+            <p><strong>Orbit Period:</strong> 365.25 days</p>
+            <p><strong>Day Length:</strong> 24 hours</p>
+        </div>
+        <div id="moon-info-box">
+            <button id="close-moon-info">-</button>
+            <h2>Moon</h2>
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTFVc-J__jhYTAssyy_ZBOetVV39_Eb38XJqQ&s" alt="Moon Image"> <!-- Replace with actual image URL -->
+            <p>The Moon is Earth’s only natural satellite and the fifth-largest moon in the Solar System.</p>
+            <p><strong>Diameter:</strong> 3,474 km</p>
+            <p><strong>Orbit Period:</strong> 27.3 days</p>
+            <p><strong>Day Length:</strong> 29.5 Earth days</p>
+        </div>
+    </div>
     
-    <canvas id="bg"></canvas>
-    <script type="module" src="/main.js"></script>
-  </body>
+    <div id="time-control">
+        <label for="rotation-speed">Rotation Speed:</label>
+        <input type="range" id="rotation-speed" min="0" max="1" step="0.01" value="1">
+    </div>
+
+    <!-- Include Three.js and OrbitControls -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/OBJLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/MTLLoader.js"></script>
+
+    <script>
+        document.getElementById('close-info').addEventListener('click', function() {
+            document.getElementById('info-box').style.display = 'none';
+        });
+        document.getElementById('close-moon-info').addEventListener('click', function() {
+            document.getElementById('moon-info-box').style.display = 'none';
+        });
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.z = 50;
+
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.shadowMap.enabled = true; // Enable shadow maps
+        document.getElementById('earth-container').appendChild(renderer.domElement);
+
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+        controls.enableZoom = true;
+
+        // Load textures
+        const textureLoader = new THREE.TextureLoader();
+        
+        const moonTexture = textureLoader.load('textures/moon1.jpg');
+        const sunTexture = textureLoader.load('textures/sun2.jpg');
+
+        
+
+
+        const earthgroup = new THREE.Group();
+        scene.add(earthgroup);
+        const loader= new THREE.TextureLoader()
+        // Earth material (reacts to light)
+        const earthMaterial = new THREE.MeshStandardMaterial({ map: loader.load('textures/earth3.jpg') });
+        // Earth geometry and mesh
+        const earthGeometry = new THREE.SphereGeometry(2, 50, 50);
+        const earth = new THREE.Mesh(earthGeometry, earthMaterial);
+        
+       
+        earthgroup.add(earth);
+        const lightsMat = new THREE.MeshStandardMaterial({map: loader.load('textures/earth_nightmap.jpg'),
+           blending: THREE.AdditiveBlending,
+        });
+        const lightsMesh = new THREE.Mesh(earthGeometry , lightsMat)
+        earthgroup.add(lightsMesh);
+
+        const cloudMat = new THREE.MeshStandardMaterial({map: loader.load('textures/cloudMesh1.png'),
+            transparent: true, opacity: 0.8,
+           blending: THREE.AdditiveBlending,
+        });
+        const cloudMesh = new THREE.Mesh(earthGeometry , cloudMat);
+        cloudMesh.scale.setScalar(1.003);
+        earthgroup.add(cloudMesh);
+
+        // Initialize OBJLoader
+const objLoader = new THREE.OBJLoader();
+const mtlLoader = new THREE.MTLLoader();
+
+// Load satellite .mtl file first
+mtlLoader.load('textures/Satellite.mtl', (materials) => {
+    materials.preload();
+
+    // Load satellite .obj file
+    objLoader.setMaterials(materials);
+    objLoader.load('textures/Satellite.obj', (object) => {
+
+        // Scale and position the satellite
+        object.scale.set(0.1, 0.05, 0.05);  // Adjust scale as needed
+        object.position.set(satelliteOrbitRadius, 0, 0);  // Initial position of the satellite
+        
+        // Optionally rotate if needed
+        object.rotation.x = Math.PI / 2;
+
+       
+        object.name = 'satellite';
+
+       
+        earthgroup.add(object);
+    });
+});
+
+        let satelliteOrbitRadius = 3;
+        let satelliteOrbitAngle = 0;
+        let satelliteOrbitSpeed = 0.001;
+
+
+        // Moon material
+        const moonMaterial = new THREE.MeshStandardMaterial({ map: moonTexture });
+
+        // Moon geometry and mesh
+        const moonGeometry = new THREE.SphereGeometry(0.5, 32, 32);
+        const moon = new THREE.Mesh(moonGeometry, moonMaterial);
+        moon.position.set(5, 0, 0);
+        
+        earthgroup.add(moon);
+
+        // venuse mesh for visualization (optional)
+        const venuseGeometry = new THREE.SphereGeometry(1.6, 32, 32);
+        const venuseMaterial = new THREE.MeshBasicMaterial({ map:  loader.load('textures/8k_venus_surface.jpg') });
+        const venuse = new THREE.Mesh(venuseGeometry, venuseMaterial);
+        venuse.position.set(-800, 10, 200);
+
+        earthgroup.add(venuse);
+        
+        // venuse mesh for visualization (optional)
+        const marsGeometry = new THREE.SphereGeometry(0.5, 32, 32);
+        const marsMaterial = new THREE.MeshBasicMaterial({ map:  loader.load('textures/96k-mars-color-map-3d-model.jpg') });
+        const mars = new THREE.Mesh(marsGeometry, marsMaterial);
+        mars.position.set(100, 0, -60);
+
+        earthgroup.add(mars);
+
+        const sunlight = new THREE.DirectionalLight(0xffffff,2);
+        sunlight.position.set(-500,0,0);
+        scene.add(sunlight);
+        const ambientLight = new THREE.AmbientLight(0x111111); // Soft white light
+        scene.add(ambientLight);
+
+        // Sun mesh for visualization (optional)
+        const sunGeometry = new THREE.SphereGeometry(100, 32, 32);
+        const sunMaterial = new THREE.MeshBasicMaterial({ map: sunTexture });
+        const sun = new THREE.Mesh(sunGeometry, sunMaterial);
+        sun.position.set(-500, 0, 0);
+        scene.add(sun);
+
+        
+        //const pointerlight = new THREE.PointLight(0XFFFFFF);
+        //venuse.add(pointerlight);
+
+        const textureLoader1 = new THREE.TextureLoader();
+        const spaceTexture = textureLoader1.load('/textures/8k_stars_milky_way.jpg'); // Replace with the correct path to your image
+        scene.background = spaceTexture;
+
+        // Rotation speed
+        const earthRealRotationSpeed = 7.272e-5;
+        const moonOrbitSpeed = 0.0001;
+        const orbitRadius = 5;
+        let moonOrbitAngle = 0;
+
+        // Moon orbit
+        const orbitGeometry = new THREE.BufferGeometry();
+        const orbitVertices = [];
+        for (let i = 0; i <= 100; i++) {
+            const angle = (i / 100) * Math.PI * 2;
+            const x = Math.cos(angle) * orbitRadius;
+            const z = Math.sin(angle) * orbitRadius;
+            orbitVertices.push(x, 0, z);
+        }
+        orbitGeometry.setAttribute('position', new THREE.Float32BufferAttribute(orbitVertices, 3));
+        const orbitMaterial = new THREE.LineBasicMaterial({ color: 0xaaaaaa });
+        const orbitLine = new THREE.Line(orbitGeometry, orbitMaterial);
+        scene.add(orbitLine);
+        
+        
+        
+
+        // Animation loop
+        function animate() {
+          requestAnimationFrame(animate);
+      
+          const rotationSpeedFactor = parseFloat(document.getElementById('rotation-speed').value);
+      
+          // Rotate Earth, clouds, and lights
+          earth.rotation.y += earthRealRotationSpeed * rotationSpeedFactor;
+          lightsMesh.rotation.y += earthRealRotationSpeed * rotationSpeedFactor;
+          cloudMesh.rotation.y += earthRealRotationSpeed * rotationSpeedFactor;
+      
+          // Rotate Moon around the Earth
+          moonOrbitAngle += moonOrbitSpeed * rotationSpeedFactor;
+          moon.position.set(
+              orbitRadius * Math.cos(moonOrbitAngle),
+              0,
+              orbitRadius * Math.sin(moonOrbitAngle)
+          );
+          
+            // satellite rotating
+          satelliteOrbitAngle += satelliteOrbitSpeed * rotationSpeedFactor;
+        const satellite = earthgroup.getObjectByName('satellite');
+        if (satellite) {
+            satellite.position.set(
+            satelliteOrbitRadius * Math.cos(satelliteOrbitAngle),
+            0,
+            satelliteOrbitRadius * Math.sin(satelliteOrbitAngle)
+        );
+    }
+
+      
+          // Update controls and render the scene
+          controls.update();
+          renderer.render(scene, camera);
+      }
+      
+        
+        animate();
+
+        // Update clock
+        function updateClock() {
+            const now = new Date();
+            const day = now.toLocaleDateString(undefined, { month: 'long', day: 'numeric', year: 'numeric' });
+            const time = now.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+            document.getElementById('clock').textContent = `${day}\n${time}`;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // Resize handler
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+
+
+       
+
+            
+    </script>
+</body>
 </html>
