@@ -33,10 +33,12 @@
             padding: 10px 20px;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+           
         }
 
         #clock:hover {
             color: darkgrey;
+           
         }
 
         #time-control {
@@ -58,22 +60,24 @@
             width: 200px;
         }
 
+        
+
         /* Information Box Styles */
         #info-box {
-            position: absolute;
-            width: 300px;
-            height: 600px;
-            top: 70px;
-            left: 20px;
-            background: rgba(0, 0, 0, 0.8);
-            padding: 20px;
-            border-radius: 10px;
-            color: white;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-            display: none;
-            z-index: 2;
-            max-width: 300px;
-        }
+        position: absolute;
+        width: 300px;
+        height: 600px;
+        top: 70px;
+        left: 20px; /* Position it 20px from the left edge */
+        background: rgba(0, 0, 0, 0.8);
+        padding: 20px;
+        border-radius: 10px;
+        color: white;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        display: none;
+        z-index: 2;
+        max-width: 300px;
+    }
 
         #info-box h2 {
             margin-top: 0;
@@ -84,34 +88,32 @@
             border-radius: 5px;
             margin-bottom: 10px;
         }
-
-        #info-box button {
+        #info-box button{
             position: absolute;
-            top: 20px;
-            right: 20px;
-            background: red;
+             top: 20px;
+             right: 20px;
+             background: red;
             color: white;
             border: none;
             padding: 10px;
             border-radius: 5px;
             cursor: pointer;
         }
-
         #moon-info-box {
-            position: absolute;
-            width: 300px;
-            height: 600px;
-            top: 70px;
-            left: 20px;
-            background: rgba(0, 0, 0, 0.8);
-            padding: 20px;
-            border-radius: 10px;
-            color: white;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-            display: none;
-            z-index: 2;
-            max-width: 300px;
-        }
+        position: absolute;
+        width: 300px;
+        height: 600px;
+        top: 70px;
+        left: 20px; /* Position it 20px from the left edge */
+        background: rgba(0, 0, 0, 0.8);
+        padding: 20px;
+        border-radius: 10px;
+        color: white;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        display: none;
+        z-index: 2;
+        max-width: 300px;
+    }
 
         #moon-info-box h2 {
             margin-top: 0;
@@ -122,8 +124,7 @@
             border-radius: 5px;
             margin-bottom: 10px;
         }
-
-        #moon-info-box button {
+        #moon-info-box button{
             position: absolute;
             top: 20px;
             right: 20px;
@@ -138,11 +139,12 @@
 </head>
 <body>
     <div id="earth-container">
+       
         <div id="clock"></div>
         <div id="info-box">
             <button id="close-info">-</button>
-            <h2>Earth</h2>
-            <img src="https://wallpapercave.com/wp/wp4729516.jpg" alt="Earth Image">
+             <h2>Earth</h2>
+            <img src="https://wallpapercave.com/wp/wp4729516.jpg" alt="Earth Image"> <!-- Replace with a valid image URL -->
             <p>The Earth is the third planet from the Sun and the only known astronomical object to harbor life.</p>
             <p><strong>Diameter:</strong> 12,742 km</p>
             <p><strong>Orbit Period:</strong> 365.25 days</p>
@@ -151,14 +153,14 @@
         <div id="moon-info-box">
             <button id="close-moon-info">-</button>
             <h2>Moon</h2>
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTFVc-J__jhYTAssyy_ZBOetVV39_Eb38XJqQ&s" alt="Moon Image">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTFVc-J__jhYTAssyy_ZBOetVV39_Eb38XJqQ&s" alt="Moon Image"> <!-- Replace with actual image URL -->
             <p>The Moon is Earth’s only natural satellite and the fifth-largest moon in the Solar System.</p>
             <p><strong>Diameter:</strong> 3,474 km</p>
             <p><strong>Orbit Period:</strong> 27.3 days</p>
             <p><strong>Day Length:</strong> 29.5 Earth days</p>
         </div>
     </div>
-
+    
     <div id="time-control">
         <label for="rotation-speed">Rotation Speed:</label>
         <input type="range" id="rotation-speed" min="0" max="1" step="0.01" value="1">
@@ -171,21 +173,21 @@
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/MTLLoader.js"></script>
 
     <script>
+        
+
         document.getElementById('close-info').addEventListener('click', function() {
             document.getElementById('info-box').style.display = 'none';
         });
-
         document.getElementById('close-moon-info').addEventListener('click', function() {
             document.getElementById('moon-info-box').style.display = 'none';
         });
-
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         camera.position.z = 50;
 
         const renderer = new THREE.WebGLRenderer();
         renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.enabled = true; // Enable shadow maps
         document.getElementById('earth-container').appendChild(renderer.domElement);
 
         const controls = new THREE.OrbitControls(camera, renderer.domElement);
@@ -193,109 +195,317 @@
         controls.dampingFactor = 0.05;
         controls.enableZoom = true;
 
+        // Load textures
+
+        const textureLoader1 = new THREE.TextureLoader();
+        const spaceTexture = textureLoader1.load('public/textures/8k_stars_milky_way.jpg'); // Replace with the correct path to your image
+        scene.background = spaceTexture;
+
         const textureLoader = new THREE.TextureLoader();
+        
+        const moonTexture = textureLoader.load('public/textures/moon1.jpg');
+        const sunTexture = textureLoader.load('public/textures/sun2.jpg');
+
+        
+
+
         const earthgroup = new THREE.Group();
         scene.add(earthgroup);
-
-        const loader = new THREE.TextureLoader();
-        const earthMaterial = new THREE.MeshStandardMaterial({ map: loader.load('textures/earth3.jpg') });
+        const loader= new THREE.TextureLoader()
+        // Earth material (reacts to light)
+        const earthMaterial = new THREE.MeshStandardMaterial({ map: loader.load('public/textures/earth3.jpg') });
+        // Earth geometry and mesh
         const earthGeometry = new THREE.SphereGeometry(2, 50, 50);
         const earth = new THREE.Mesh(earthGeometry, earthMaterial);
+        
+       
         earthgroup.add(earth);
-
-        const lightsMat = new THREE.MeshStandardMaterial({
-            map: loader.load('textures/earth_nightmap.jpg'),
-            blending: THREE.AdditiveBlending,
+        const lightsMat = new THREE.MeshStandardMaterial({map: loader.load('public/textures/earth_nightmap.jpg'),
+           blending: THREE.AdditiveBlending,
         });
-        const lightsMesh = new THREE.Mesh(earthGeometry, lightsMat);
+        const lightsMesh = new THREE.Mesh(earthGeometry , lightsMat)
         earthgroup.add(lightsMesh);
 
-        const cloudMat = new THREE.MeshStandardMaterial({
-            map: loader.load('textures/cloudMesh1.png'),
-            transparent: true,
-            opacity: 0.8,
-            blending: THREE.AdditiveBlending,
+        const cloudMat = new THREE.MeshStandardMaterial({map: loader.load('public/textures/cloudMesh1.png'),
+            transparent: true, opacity: 1.8,
+           blending: THREE.AdditiveBlending,
         });
-        const cloudMesh = new THREE.Mesh(earthGeometry, cloudMat);
+        const cloudMesh = new THREE.Mesh(earthGeometry , cloudMat);
         cloudMesh.scale.setScalar(1.003);
+        
         earthgroup.add(cloudMesh);
 
         // Initialize OBJLoader
-        const objLoader = new THREE.OBJLoader();
-        const mtlLoader = new THREE.MTLLoader();
+const objLoader = new THREE.OBJLoader();
+const mtlLoader = new THREE.MTLLoader();
 
-        // Create 5 satellites with different orbits
-        let satellites = [];
-        let satelliteOrbitRadii = [3, 4, 5, 6, 7];  // Different orbit radii
-        let satelliteOrbitAngles = [0, 0, 0, 0, 0]; // Initialize orbit angles for satellites
-        let satelliteOrbitSpeeds = [0.001, 0.0008, 0.0012, 0.0009, 0.0015]; // Different orbit speeds
+// Load satellite .mtl file first
+mtlLoader.load('public/textures/Satellite.mtl', (materials) => {
+    materials.preload();
 
-        mtlLoader.load('textures/Satellite.mtl', function(materials) {
-            materials.preload();
-            objLoader.setMaterials(materials);
+    // Load satellite .obj file
+    objLoader.setMaterials(materials);
+    objLoader.load('public/textures/Satellite.obj', (object) => {
 
-            objLoader.load('textures/Satellite.obj', function(object) {
-                for (let i = 0; i < 5; i++) {
-                    let satellite = object.clone();
-                    satellite.scale.set(0.01, 0.01, 0.01);
-                    satellite.position.set(satelliteOrbitRadii[i], 0, 0); // Set initial position based on orbit radius
-                    scene.add(satellite);
-                    satellites.push(satellite);
-                }
-            });
-        });
+        // Scale and position the satellite
+        object.scale.set(0.1, 0.05, 0.05);  // Adjust scale as needed
+        object.position.set(satelliteOrbitRadius, 0, 0);  // Initial position of the satellite
+        
+        // Optionally rotate if needed
+        object.rotation.x = Math.PI / 2;
 
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+       
+        object.name = 'satellite';
+
+       
+        earthgroup.add(object);
+    });
+});
+
+        let satelliteOrbitRadius = 3;
+        let satelliteOrbitAngle = 0;
+        let satelliteOrbitSpeed = 0.001;
+
+// Satellite 2
+mtlLoader.load('public/textures/Satellite.mtl', (materials) => {
+    materials.preload();
+
+    objLoader.setMaterials(materials);
+    objLoader.load('public/textures/Satellite2.obj', (object) => {
+        object.scale.set(0.1, 0.05, 0.05);
+        object.position.set(-100, 100, 100); // Adjust orbit radius
+        object.rotation.x = Math.PI / 2;
+        object.name = 'satellite2';
+        earthgroup.add(object);
+    });
+});
+
+let satelliteOrbitRadius2 = 40;
+let satelliteOrbitAngle2 = 0;
+let satelliteOrbitSpeed2 = 0.00012; // Different speed
+
+// Satellite 3
+mtlLoader.load('public/textures/Satellite.mtl', (materials) => {
+    materials.preload();
+
+    objLoader.setMaterials(materials);
+    objLoader.load('public/textures/Satellite.obj', (object) => {
+        object.scale.set(0.1, 0.05, 0.05);
+        object.position.set(5, 0, 0); // Adjust orbit radius
+        object.rotation.x = Math.PI / 2;
+        object.name = 'satellite3';
+        earthgroup.add(object);
+    });
+});
+
+let satelliteOrbitRadius3 = 5;
+let satelliteOrbitAngle3 = 0;
+let satelliteOrbitSpeed3 = 0.0015; // Different speed
+
+// Satellite 4
+mtlLoader.load('public/textures/Satellite.mtl', (materials) => {
+    materials.preload();
+
+    objLoader.setMaterials(materials);
+    objLoader.load('public/textures/Satellite.obj', (object) => {
+        object.scale.set(0.1, 0.05, 0.05);
+        object.position.set(6, 0, 0); // Adjust orbit radius
+        object.rotation.x = Math.PI / 2;
+        object.name = 'satellite4';
+        earthgroup.add(object);
+    });
+});
+
+let satelliteOrbitRadius4 = 6;
+let satelliteOrbitAngle4 = 0;
+let satelliteOrbitSpeed4 = 0.0018; // Different speed
+
+// Satellite 5
+mtlLoader.load('public/textures/Satellite.mtl', (materials) => {
+    materials.preload();
+
+    objLoader.setMaterials(materials);
+    objLoader.load('public/textures/Satellite.obj', (object) => {
+        object.scale.set(0.1, 0.05, 0.05);
+        object.position.set(7, 0, 0); // Adjust orbit radius
+        object.rotation.x = Math.PI / 2;
+        object.name = 'satellite5';
+        earthgroup.add(object);
+    });
+});
+
+let satelliteOrbitRadius5 = 7;
+let satelliteOrbitAngle5 = 0;
+let satelliteOrbitSpeed5 = 0.002; // Different speed
+        // Moon material
+        const moonMaterial = new THREE.MeshStandardMaterial({ map: moonTexture });
+
+        // Moon geometry and mesh
+        const moonGeometry = new THREE.SphereGeometry(0.5, 32, 32);
+        const moon = new THREE.Mesh(moonGeometry, moonMaterial);
+        moon.position.set(5, 0, 0);
+        
+        earthgroup.add(moon);
+
+        // venuse mesh for visualization (optional)
+        const venuseGeometry = new THREE.SphereGeometry(1.6, 32, 32);
+        const venuseMaterial = new THREE.MeshBasicMaterial({ map:  loader.load('public/textures/8k_venus_surface.jpg') });
+        const venuse = new THREE.Mesh(venuseGeometry, venuseMaterial);
+        venuse.position.set(-800, 10, 200);
+
+        earthgroup.add(venuse);
+        
+        // venuse mesh for visualization (optional)
+        const marsGeometry = new THREE.SphereGeometry(0.5, 32, 32);
+        const marsMaterial = new THREE.MeshBasicMaterial({ map:  loader.load('public/textures/96k-mars-color-map-3d-model.jpg') });
+        const mars = new THREE.Mesh(marsGeometry, marsMaterial);
+        mars.position.set(100, 0, -60);
+
+        earthgroup.add(mars);
+
+        const sunlight = new THREE.DirectionalLight(0xffffff,2);
+        sunlight.position.set(-500,0,0);
+        scene.add(sunlight);
+        const ambientLight = new THREE.AmbientLight(0x111111); // Soft white light
         scene.add(ambientLight);
 
-        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-        directionalLight.position.set(10, 10, 10);
-        scene.add(directionalLight);
+        // Sun mesh for visualization (optional)
+        const sunGeometry = new THREE.SphereGeometry(100, 32, 32);
+        const sunMaterial = new THREE.MeshBasicMaterial({ map: sunTexture });
+        const sun = new THREE.Mesh(sunGeometry, sunMaterial);
+        sun.position.set(-500, 0, 0);
+        scene.add(sun);
 
-        const starGeometry = new THREE.BufferGeometry();
-        const starMaterial = new THREE.PointsMaterial({ color: 0xffffff });
-        const starVertices = [];
-        for (let i = 0; i < 10000; i++) {
-            starVertices.push((Math.random() - 0.5) * 2000);
-            starVertices.push((Math.random() - 0.5) * 2000);
-            starVertices.push(-Math.random() * 2000);
+        
+        //const pointerlight = new THREE.PointLight(0XFFFFFF);
+        //venuse.add(pointerlight);
+
+        
+
+        // Rotation speed
+        const earthRealRotationSpeed = 7.272e-5;
+        const moonOrbitSpeed = 0.0001;
+        const orbitRadius = 5;
+        let moonOrbitAngle = 0;
+
+        // Moon orbit
+        const orbitGeometry = new THREE.BufferGeometry();
+        const orbitVertices = [];
+        for (let i = 0; i <= 100; i++) {
+            const angle = (i / 100) * Math.PI * 2;
+            const x = Math.cos(angle) * orbitRadius;
+            const z = Math.sin(angle) * orbitRadius;
+            orbitVertices.push(x, 0, z);
         }
-        starGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starVertices, 3));
-        const stars = new THREE.Points(starGeometry, starMaterial);
-        scene.add(stars);
+        orbitGeometry.setAttribute('position', new THREE.Float32BufferAttribute(orbitVertices, 3));
+        const orbitMaterial = new THREE.LineBasicMaterial({ color: 0xaaaaaa });
+        const orbitLine = new THREE.Line(orbitGeometry, orbitMaterial);
+        scene.add(orbitLine);
+        
+        
+        
 
-        let earthRotationSpeed = 0.000072722; // Approximate real rotation speed (radians per frame)
-        const clockElement = document.getElementById('clock');
-
-        let timeSpeed = 1;
-
-        clockElement.addEventListener('click', function() {
-            timeSpeed = timeSpeed === 1 ? 10 : 1;
-        });
-
-        const rotationSpeedControl = document.getElementById('rotation-speed');
-        rotationSpeedControl.addEventListener('input', function() {
-            earthRotationSpeed = parseFloat(rotationSpeedControl.value);
-        });
-
+        // Animation loop
         function animate() {
-            requestAnimationFrame(animate);
+          requestAnimationFrame(animate);
+      
+          const rotationSpeedFactor = parseFloat(document.getElementById('rotation-speed').value);
+      
+          // Rotate Earth, clouds, and lights
+          earth.rotation.y += earthRealRotationSpeed * rotationSpeedFactor;
+          lightsMesh.rotation.y += earthRealRotationSpeed * rotationSpeedFactor;
+          cloudMesh.rotation.y += earthRealRotationSpeed * rotationSpeedFactor;
+      
+          // Rotate Moon around the Earth
+          moonOrbitAngle += moonOrbitSpeed * rotationSpeedFactor;
+          moon.position.set(
+              orbitRadius * Math.cos(moonOrbitAngle),
+              0,
+              orbitRadius * Math.sin(moonOrbitAngle)
+          );
+          
+            // satellite rotating
+          satelliteOrbitAngle += satelliteOrbitSpeed * rotationSpeedFactor;
+          satelliteOrbitAngle2 += satelliteOrbitSpeed2 * rotationSpeedFactor;
+          satelliteOrbitAngle3 += satelliteOrbitSpeed3 * rotationSpeedFactor;
+          satelliteOrbitAngle4 += satelliteOrbitSpeed4 * rotationSpeedFactor;
+          satelliteOrbitAngle5 += satelliteOrbitSpeed5 * rotationSpeedFactor;
+        const satellite = earthgroup.getObjectByName('satellite');
+        const satellite2 = earthgroup.getObjectByName('satellite2');
+    const satellite3 = earthgroup.getObjectByName('satellite3');
+    const satellite4 = earthgroup.getObjectByName('satellite4');
+    const satellite5 = earthgroup.getObjectByName('satellite5');
+        if (satellite) {
+            satellite.position.set(
+            satelliteOrbitRadius * Math.cos(satelliteOrbitAngle),
+            0,
+            satelliteOrbitRadius * Math.sin(satelliteOrbitAngle)
+        );
+    }
+    if (satellite2) {
+        satellite2.position.set(
+            satelliteOrbitRadius2 * Math.cos(satelliteOrbitAngle2),
+            satelliteOrbitRadius2 * Math.sin(satelliteOrbitAngle2),
+            0,
+            
+        );
+    }
 
-            earth.rotation.y += earthRotationSpeed * timeSpeed;
+    if (satellite3) {
+        satellite3.position.set(
+            0,
+            satelliteOrbitRadius3 * Math.cos(satelliteOrbitAngle3),
+            satelliteOrbitRadius3 * Math.sin(satelliteOrbitAngle3)
+        );
+    }
 
-            // Update satellites' positions
-            for (let i = 0; i < satellites.length; i++) {
-                satelliteOrbitAngles[i] += satelliteOrbitSpeeds[i];
-                let x = satelliteOrbitRadii[i] * Math.cos(satelliteOrbitAngles[i]);
-                let z = satelliteOrbitRadii[i] * Math.sin(satelliteOrbitAngles[i]);
-                satellites[i].position.set(x, 0, z);
-            }
+    if (satellite4) {
+        satellite4.position.set(
+            satelliteOrbitRadius4 * Math.cos(satelliteOrbitAngle4),
+            0,
+            satelliteOrbitRadius4 * Math.sin(satelliteOrbitAngle4)
+        );
+    }
 
-            controls.update();
-            renderer.render(scene, camera);
-        }
+    if (satellite5) {
+        satellite5.position.set(
+            satelliteOrbitRadius5 * Math.cos(satelliteOrbitAngle5),
+            0,
+            satelliteOrbitRadius5 * Math.sin(satelliteOrbitAngle5)
+        );
+    }
 
+      
+          // Update controls and render the scene
+          controls.update();
+          renderer.render(scene, camera);
+      }
+      
+        
         animate();
+
+        // Update clock
+        function updateClock() {
+            const now = new Date();
+            const day = now.toLocaleDateString(undefined, { month: 'long', day: 'numeric', year: 'numeric' });
+            const time = now.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+            document.getElementById('clock').textContent = `${day}\n${time}`;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // Resize handler
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+
+
+       
+
+            
     </script>
 </body>
 </html>
